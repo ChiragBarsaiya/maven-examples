@@ -15,7 +15,7 @@ node {
       } 
     }
    
-   withSonarQubeEnv(credentialsId: 'SonarCloud') {
+   withSonarQubeEnv(credentialsId: 'SonarQube') {
     withMaven(jdk: 'JDKv8', maven: 'Maven') {
     sh 'mvn sonar:sonar' 
       }
