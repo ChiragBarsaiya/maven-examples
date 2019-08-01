@@ -14,9 +14,19 @@ node {
      sh 'mvn test'
       } 
     }
-   stage('Sonar CodeAnalysis') {
-     withMaven(jdk: 'JDKv8', maven: 'Maven') {
-        sh 'mvn sonar:sonar -Dsonar.projectKey=maven-examples -Dsonar.organization=chiragbarsaiya -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=cd881660badd69bf040c5ddae90f4a4795fd3db2'   }  
+   
+   withSonarQubeEnv(credentialsId: 'sonarqubeid') {
+    withMaven(jdk: 'JDKv8', maven: 'Maven') {
+    sh 'mvn sonar:sonar' 
+      }
+    }
+  stage("Quality Gate"){
+          timeout(time: 1, unit: 'HOURS') {
+              def qg = waitForQualityGate()
+              if (qg.status != 'OK') {
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              }
+          }
     }
    stage('Package to Jfrog') {
     withMaven(jdk: 'JDKv8', maven: 'Maven') {
