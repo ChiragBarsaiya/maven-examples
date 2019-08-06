@@ -17,7 +17,7 @@ node {
    
    withSonarQubeEnv(credentialsId: 'SonarQube') {
       withMaven(jdk: 'JDKv8', maven: 'Maven') {
-    sh 'mvn clean compile sonar:sonar' 
+    sh 'mvn clean verify sonar:sonar' 
       }
     }
   stage("Quality Gate"){
